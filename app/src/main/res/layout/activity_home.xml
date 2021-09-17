@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,13 +12,119 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextTextPersonName3"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="SUCCESS!!"
-            android:textSize="60sp" />
+            android:layout_height="64dp"
+            android:background="@drawable/underbar"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/menu_bar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/menu1" />
+
+            <ImageButton
+                android:id="@+id/menu_logo"
+                android:layout_width="197dp"
+                android:layout_height="51dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginLeft="52dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="52dp"
+                android:layout_marginRight="52dp"
+                android:adjustViewBounds="true"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/namelogo2" />
+
+            <ImageButton
+                android:id="@+id/menu_home"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/home3" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="101dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/map_bt"
+                android:layout_width="197dp"
+                android:layout_height="224dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/mapicon" />
+
+            <ImageButton
+                android:id="@+id/sms_bt"
+                android:layout_width="197dp"
+                android:layout_height="224dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/messageicon" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/led_bt"
+                android:layout_width="197dp"
+                android:layout_height="224dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ledicon" />
+
+            <ImageButton
+                android:id="@+id/phone_bt"
+                android:layout_width="197dp"
+                android:layout_height="224dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/phoneicon" />
+        </LinearLayout>
+
+
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+
+    />
+</androidx.constraintlayout.widget.ConstraintLayout>

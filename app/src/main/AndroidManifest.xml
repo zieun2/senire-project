@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.buddycane">
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-sdk
+        android:maxSdkVersion="17"
+        android:minSdkVersion="8" />
+    <!-- 현재 위치 띄우기 위한 권한 설정 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+   <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />  (아래줄) 네트워크 연결을 위한 권한 설정 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,13 +21,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Buddycane">
         <activity android:name=".Home"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Intro">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Map"></activity>
+        <activity android:name=".Message"></activity>
+        <activity android:name=".Led"></activity>
+        <activity android:name=".Phone"></activity>
+        <activity android:name=".MainActivity"></activity>
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="4pet16c8gs" />
+
     </application>
 
 </manifest>
