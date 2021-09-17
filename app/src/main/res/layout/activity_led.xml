@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Led">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@drawable/underbar"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/menu_bar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/menu1" />
+
+            <ImageButton
+                android:id="@+id/menu_logo"
+                android:layout_width="197dp"
+                android:layout_height="51dp"
+                android:layout_marginStart="52dp"
+                android:layout_marginLeft="52dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="52dp"
+                android:layout_marginRight="52dp"
+                android:adjustViewBounds="true"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/namelogo2" />
+
+            <ImageButton
+                android:id="@+id/menu_home"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/home3" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="92dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="166dp"
+                android:layout_height="224dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/led_on_icon" />
+
+            <ImageButton
+                android:id="@+id/imageButton4"
+                android:layout_width="wrap_content"
+                android:layout_height="224dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/blacksqure"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/led_off_icon" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
