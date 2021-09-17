@@ -326,7 +326,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //doInBackground()로 부터 리턴된 값이 onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
+            //doInBackground()로 부터 리턴된 값이 /onPostExecute()의 매개변수로 넘어오므로 s를 출력한다.
 
             try {
                 //전체 데이터를 제이슨 객체로 변환
