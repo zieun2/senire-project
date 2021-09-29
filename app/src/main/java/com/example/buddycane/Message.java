@@ -1,16 +1,18 @@
 package com.example.buddycane;
 
 import android.content.Intent;
-//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
-import android.telephony.SmsManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+
+
+
 
 public class Message extends AppCompatActivity {
 
@@ -18,14 +20,20 @@ public class Message extends AppCompatActivity {
     private EditText phone_number;
     private EditText message_content;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
+
+
+
         send_button = (ImageButton) findViewById(R.id.send_button);
         phone_number = (EditText) findViewById(R.id.phone_number);
         message_content = (EditText) findViewById(R.id.message_content);
+
 
 
 

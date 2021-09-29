@@ -38,6 +38,12 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="4pet16c8gs" />
 
+        <receiver android:name=".Message">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -40,18 +40,7 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        ImageButton led_bt = (ImageButton) findViewById(R.id.led_bt);
-        led_bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Led.class);
-                startActivity(intent);
-
-
-            }
-        });
-
-        ImageButton phone_bt = (ImageButton) findViewById(R.id.phone_bt);
+        ImageButton phone_bt = (ImageButton) findViewById(R.id.cane_bt);
         phone_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
