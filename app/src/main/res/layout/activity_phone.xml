@@ -61,5 +61,18 @@
             android:text="phone"
             android:textColor="#7249BA"
             android:textSize="96sp" />
+
+        <Button
+            android:id="@+id/btnBTCon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <TextView
+            android:id="@+id/tvBT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
