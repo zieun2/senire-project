@@ -1,50 +1,26 @@
+// 나만의 과제 : https://ddangeun.tistory.com/59 비교해보기
+// HC-06 세팅법 : https://devsoboro.tistory.com/12?category=817998
+
 package com.example.buddycane;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-
-
-import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
-import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
 //import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import app.akexorcist.bluetotohspp.library.BluetoothSPP;
+import app.akexorcist.bluetotohspp.library.BluetoothState;
+import app.akexorcist.bluetotohspp.library.DeviceList;
 
 public class Phone extends AppCompatActivity {
 
-    public BluetoothAdapter mBluetoothAdapter;
-    public Set<BluetoothDevice> mDevices;
-    private BluetoothSocket bSocket;
-    private OutputStream mOutputStream;
-    private InputStream mInputStream;
-    private BluetoothDevice mRemoteDevice;
-    public boolean onBT = false;
-    public byte[] sendByte = new byte[4];
-    public TextView tvBT;
-    public ProgressDialog asyncDialog;
-    private static final int REQUEST_ENABLE_BT = 1;
-    public Button BTButton;
-
-
+    private BluetoothSPP bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,200 +29,135 @@ public class Phone extends AppCompatActivity {
 
         ImageButton menu_home = (ImageButton) findViewById(R.id.menu_home);
         menu_home.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Home.class);
+                Intent intent = new Intent(getApplicationContext(), Home.class); // 홈버튼 누르면 홈으로 화면 전환하도록
                 startActivity(intent);
             }
         });
-        BTButton = findViewById(R.id.btnBTCon);
-        BTButton.setOnClickListener(new Button.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View view) {
 
+        bt = new BluetoothSPP(this); //Initializing
 
-                if (!onBT) { //Connect
-                    mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (mBluetoothAdapter == null) { //장치가 블루투스를 지원하지 않는 경우.
-                        Toast.makeText(getApplicationContext(), "Bluetooth 지원을 하지 않는 기기입니다.", Toast.LENGTH_SHORT).show();
-                    } else { // 장치가 블루투스를 지원하는 경우.
-                        if (!mBluetoothAdapter.isEnabled()) {
-                            // 블루투스를 지원하지만 비활성 상태인 경우
-                            // 블루투스를 활성 상태로 바꾸기 위해 사용자 동의 요청
-                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                        } else {
-                            // 블루투스를 지원하며 활성 상태인 경우
-                            // 페어링된 기기 목록을 보여주고 연결할 장치를 선택.
-                            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-                            if (pairedDevices.size() > 0) {
-                                // 페어링 된 장치가 있는 경우.
-                                selectDevice();
-                            } else {
-                                // 페어링 된 장치가 없는 경우.
-                                Toast.makeText(getApplicationContext(), "먼저 Bluetooth 설정에 들어가 페어링을 진행해 주세요.", Toast.LENGTH_SHORT).show();
-                            }
+        if (!bt.isBluetoothAvailable()) { //블루투스 사용 불가
+            Toast.makeText(getApplicationContext()
+                    , "Bluetooth is not available"
+                    , Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
-                        }
+        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() { //데이터 수신
+            public void onDataReceived(byte[] data, String message) {
+                Toast.makeText(Phone.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-                    }
+        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() { //연결됐을 때
+            public void onDeviceConnected(String name, String address) {
+                Toast.makeText(getApplicationContext()
+                        , "Connected to " + name + "\n" + address
+                        , Toast.LENGTH_SHORT).show();
+            }
 
-                }else{ //DisConnect
+            public void onDeviceDisconnected() { //연결해제
+                Toast.makeText(getApplicationContext()
+                        , "Connection lost", Toast.LENGTH_SHORT).show();
+            }
 
-                    try {
-                        BTSend.interrupt();   // 데이터 송신 쓰레드 종료
-                        mInputStream.close();
-                        mOutputStream.close();
-                        bSocket.close();
-                        onBT = false;
-                        BTButton.setText("connect");
-                    } catch(Exception ignored) { }
+            public void onDeviceConnectionFailed() { //연결실패
+                Toast.makeText(getApplicationContext()
+                        , "Unable to connect", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        Button btnConnect = findViewById(R.id.btnConnect); //연결시도
+        btnConnect.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                    bt.disconnect();
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), DeviceList.class);
+                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
                 }
             }
         });
     }
 
-    public void selectDevice() {
-        mDevices = mBluetoothAdapter.getBondedDevices();
-        final int mPairedDeviceCount = mDevices.size();
+    public void onDestroy() {
+        super.onDestroy();
+        bt.stopService(); //블루투스 중지
+    }
 
-        if (mPairedDeviceCount == 0) {
-            //  페어링 된 장치가 없는 경우
-            Toast.makeText(getApplicationContext(),"장치를 페어링 해주세요!",Toast.LENGTH_SHORT).show();
+    public void onStart() {
+        super.onStart();
+        if (!bt.isBluetoothEnabled()) { //
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, BluetoothState.REQUEST_ENABLE_BT);
+            //startActivityForResult is deprecated..오류 뜨면
+            // 참조 --> https://blog.daum.net/gomahaera/26
+            // 참조 --> https://modelmaker.tistory.com/18
+            // 참조 --> https://junyoung-developer.tistory.com/151
+            // 참조 --> https://crazykim2.tistory.com/497
+
+        } else {
+            if (!bt.isServiceAvailable()) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_OTHER); //DEVICE_ANDROID는 안드로이드 기기 끼리
+                setup();
+            }
         }
+    }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("블루투스 장치 선택");
-
-
-        // 페어링 된 블루투스 장치의 이름 목록 작성
-        List<String> listItems = new ArrayList<>();
-        for(BluetoothDevice device : mDevices) {
-            listItems.add(device.getName());
-        }
-        listItems.add("취소");    // 취소 항목 추가
-
-        final CharSequence[] items = listItems.toArray(new CharSequence[listItems.size()]);
-
-        builder.setItems(items,new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if(item == mPairedDeviceCount) {
-                    // 연결할 장치를 선택하지 않고 '취소'를 누른 경우
-                    //finish();
-                }
-                else {
-                    // 연결할 장치를 선택한 경우
-                    // 선택한 장치와 연결을 시도함
-                    connectToSelectedDevice(items[item].toString());
-                }
+    public void setup() {
+        Button btnSend = findViewById(R.id.btnSend); //데이터 전송
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                bt.send("on", false);
+                // CRLF를 true로 설정 시 줄바꿈, false 설정 시 줄바꿈X
             }
         });
-
-
-        builder.setCancelable(false);    // 뒤로 가기 버튼 사용 금지
-        AlertDialog alert = builder.create();
-        alert.show();
-
-    }
-
-    public void connectToSelectedDevice(final String selectedDeviceName) {
-        mRemoteDevice = getDeviceFromBondedList(selectedDeviceName);
-
-        //Progress Dialog
-        asyncDialog = new ProgressDialog(Phone.this);
-        asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        asyncDialog.setMessage("블루투스 연결중..");
-        asyncDialog.show();
-        asyncDialog.setCancelable(false);
-
-        Thread BTConnect = new Thread(new Runnable() {
-            public void run() {
-
-                try {
-                    UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"); //HC-06 UUID
-                    // 소켓 생성
-                    bSocket = mRemoteDevice.createRfcommSocketToServiceRecord(uuid);
-
-
-
-                    // RFCOMM 채널을 통한 연결
-                    bSocket.connect();
-
-                    // 데이터 송수신을 위한 스트림 열기
-                    mOutputStream = bSocket.getOutputStream();
-                    mInputStream = bSocket.getInputStream();
-
-
-                    runOnUiThread(new Runnable() {
-                        @SuppressLint({"ShowToast", "SetTextI18n"})
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),selectedDeviceName + " 연결 완료",Toast.LENGTH_LONG).show();
-                            tvBT = findViewById(R.id.tvBT);
-                            tvBT.setText(selectedDeviceName + " Connected");
-                            BTButton.setText("disconnect");
-                            asyncDialog.dismiss();
-                        }
-                    });
-
-                    onBT = true;
-
-
-                }catch(Exception e) {
-                    // 블루투스 연결 중 오류 발생
-                    runOnUiThread(new Runnable() {
-                        @SuppressLint({"ShowToast", "SetTextI18n"})
-                        @Override
-                        public void run() {
-                            tvBT.setText("연결 오류 -- BT 상태 확인해주세요.");
-                            asyncDialog.dismiss();
-                            Toast.makeText(getApplicationContext(),"블루투스 연결 오류",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                }
-
-
+        
+        Button btnSend2 = findViewById(R.id.btnSend2); //데이터 전송
+        btnSend2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                bt.send("off", false);
+                // CRLF를 true로 설정 시 줄바꿈, false 설정 시 줄바꿈X
             }
         });
-        BTConnect.start();
-
-
     }
 
-    public BluetoothDevice getDeviceFromBondedList(String name) {
-        BluetoothDevice selectedDevice = null;
-
-        for(BluetoothDevice device : mDevices) {
-            if(name.equals(device.getName())) {
-                selectedDevice = device;
-                break;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // super와 위에 @Override는 원래 없던 줄 추가한 것 --> 마지막 인수에 data가 맞나? intent가 맞나?
+        // super 사용 시 Activity API의 다른 이벤트 함수와 더 일관성이 있으며 비용이 들지 않으며 (호출하는 코드는 현재 아무 작업도하지 않음) 기본 클래스가 변경됩니다.
+        if (requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+            if (resultCode == Activity.RESULT_OK)
+                bt.connect(data);
+        } else if (requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if (resultCode == Activity.RESULT_OK) {
+                bt.setupService();
+                bt.startService(BluetoothState.DEVICE_OTHER);
+                setup();
+            } else {
+                Toast.makeText(getApplicationContext()
+                        , "Bluetooth was not enabled."
+                        , Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
-        return selectedDevice;
     }
 
-    Thread BTSend  = new Thread(new Runnable() {
-        public void run() {
-            try {
-                mOutputStream.write(sendByte);    // 프로토콜 전송
-            } catch (Exception e) {
-                // 문자열 전송 도중 오류가 발생한 경우.
-            }
-        }
-    });
-
-    //fixme : 데이터 전송
-    public void sendbtData(int btLightPercent) throws IOException {
-        //sendBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        byte[] bytes = new byte[4];
-        bytes[0] = (byte) 0xa5;
-        bytes[1] = (byte) 0x5a;
-        bytes[2] = 1; //command
-        bytes[3] = (byte) btLightPercent;
-        sendByte = bytes;
-        BTSend.run();
-    }
 }
+
+
+//참조: https://devsoboro.tistory.com/13 [CodeJUN]
+
+// 아두이노 센서값 안드로이드에서 받기
+//https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=tsniper_72&logNo=221261130141
+
+//안드로이드 앱으로 led 제어
+//https://webnautes.tistory.com/966
+
+//시각장애지팡이 참고
+// https://redbinalgorithm.tistory.com/289?category=928541
